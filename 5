@@ -1,0 +1,83 @@
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.app.WallpaperManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.Toast;
+import java.io.IOError;
+import java.io.IOException;
+import java.util.Random;
+
+
+
+
+public class MainActivity extends AppCompatActivity {
+
+    int[] images;
+    Handler handler;
+    Runnable runnable;
+    int delay = 30000;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        handler= new Handler();
+
+    }
+    @Override
+    protected void onResume(){
+        handler.postDelayed(runnable=new Runnable() {
+            @Override
+            public void run() {
+                handler.postDelayed(runnable,delay);
+                setWallPaper();
+
+            }
+        },delay);
+        super.onResume();
+
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        handler.removeCallbacks(runnable);
+
+    }
+    public void ChangeImage(View view){
+        setWallPaper();
+
+    }
+
+    private void setWallPaper() {
+        images= new int[] {
+                R.drawable.i1,
+                R.drawable.i2,
+                R.drawable.i3,
+                R.drawable.i4,
+                R.drawable.i5
+        };
+        int arylength=images.length;
+        Random random = new Random();
+        int rnum = random.nextInt(arylength);
+        Bitmap bitmap= BitmapFactory.decodeResource(getResources(),images[rnum]);
+        WallpaperManager manager=WallpaperManager.getInstance(getApplicationContext());
+        try{
+            manager.setBitmap(bitmap);
+            Toast.makeText(this,"Wall Paper Changed",Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+}
+
